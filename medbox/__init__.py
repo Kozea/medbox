@@ -50,10 +50,6 @@ def get_product(payload, product_id):
         .filter_by(client_id=app.config['CLIENT_ID'])
         .all())
     if products:
-        product_id = products[0].product_id
-        result = image_api.get(payload, product_id=product_id)
-        for obj in result['objects']:
-            obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
-        return result
+        return product_api.get(payload, product_id=products[0].product_id)
     else:
         return {'objects': [], 'occurences': 0}
