@@ -44,7 +44,11 @@ def get_image(payload, client_id, product_id, name, ext):
 
 @product_api.declare('GET')
 def get_product(payload, product_id):
-    products = Product.query.filter_by(cip=str(product_id)).all()
+    products = (
+        Product.query
+        .filter_by(cip=str(product_id))
+        .filter_by(client_id=app.config['CLIENT_ID'])
+        .all())
     if products:
         product_id = products[0].product_id
         result = image_api.get(payload, product_id=product_id)
