@@ -26,18 +26,30 @@ app = Hydra(__name__)
 
 
 rest = UnRest(app, db.session)
-rest(
-    Product, query=filter_query, only=(
-        'product_id', 'title', 'description', 'cip', 'resip_labo_code',
-        'type_product'))
 rest(Labo, only=('label',))
+product_api = rest(Product, query=filter_query, only=(
+    'product_id', 'title', 'description', 'cip', 'resip_labo_code',
+    'type_product'))
 image_api = rest(
     ProductImage, query=filter_query, only=('product_id', 'name', 'ext'))
 
 
 @image_api.declare('GET')
-def get(payload, client_id, product_id, name, ext):
+def get_image(payload, client_id, product_id, name, ext):
     result = image_api.get(payload, product_id=product_id)
     for obj in result['objects']:
         obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
     return result
+
+
+@product_api.declare('GET')
+def get_product(payload, product_id):
+    products = Product.query.filter_by(cip=str(product_id)).all()
+    if products:
+        product_id = products[0].product_id
+        result = image_api.get(payload, product_id=product_id)
+        for obj in result['objects']:
+            obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
+        return result
+    else:
+        return {'objects': [], 'occurences': 0}
