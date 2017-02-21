@@ -1,3 +1,5 @@
+from urllib.parse import quote_plus
+
 from top_model import db
 from top_model.ext.flask import FlaskTopModel
 from top_model.filesystem import ProductPhotoCIP
@@ -36,6 +38,7 @@ image_api = rest(ProductPhotoCIP, only=('cip', 'name', 'ext'))
 def get_image(payload, cip, name, ext):
     result = image_api.get(payload, cip=cip)
     for obj in result['objects']:
+        obj['name'] = quote_plus(obj['name'])
         obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
     return result
 
