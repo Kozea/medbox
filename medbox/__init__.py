@@ -1,6 +1,6 @@
 from top_model import db
 from top_model.ext.flask import FlaskTopModel
-from top_model.filesystem import ProductImage
+from top_model.filesystem import ProductPhotoCIP
 from top_model.webstore import Product, Labo
 from unrest import UnRest
 
@@ -10,8 +10,7 @@ class Hydra(FlaskTopModel):
         super().__init__(*args, **kwargs)
         self.config['CLIENT_ID'] = 4
         self.config['BASE_IMAGE_URL'] = (
-            'https://static.pharminfo.fr/static/clients/{client_id}/'
-            'images/product/{product_id}/{name}.{ext}')
+            'https://static.pharminfo.fr/images/cip/{cip}/{name}.{ext}')
         self.config['SQLALCHEMY_DATABASE_URI'] = (
             'pgfdw://hydra@localhost/hydra')
         self.config.from_envvar('MEDBOX_SETTINGS', silent=True)
@@ -30,13 +29,12 @@ rest(Labo, only=('label',))
 product_api = rest(Product, query=filter_query, only=(
     'product_id', 'title', 'description', 'cip', 'resip_labo_code',
     'type_product'))
-image_api = rest(
-    ProductImage, query=filter_query, only=('product_id', 'name', 'ext'))
+image_api = rest(ProductPhotoCIP, only=('cip', 'name', 'ext'))
 
 
 @image_api.declare('GET')
-def get_image(payload, client_id, product_id, name, ext):
-    result = image_api.get(payload, product_id=product_id)
+def get_image(payload, cip, name, ext):
+    result = image_api.get(payload, cip=cip)
     for obj in result['objects']:
         obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
     return result
