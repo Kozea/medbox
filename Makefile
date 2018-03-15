@@ -6,17 +6,9 @@ all: install serve
 install-python:
 	test -d $(VENV) || virtualenv $(VENV)
 	# Top model
-	{\
-		eval $$(ssh-agent -s);\
-		chmod 600 keys/top_model;\
-		ssh-add keys/top_model;\
-		test -d ~/.ssh || mkdir -p ~/.ssh;\
-		ssh-keygen -R github.com;\
-		ssh-keyscan -H github.com >> ~/.ssh/known_hosts;\
-		$(PIP) install --upgrade --no-cache git+ssh://git@github.com/Kozea/top_model.git#egg=top_model;\
-	}
+	$(PIP) install --upgrade --no-cache git+ssh://git@github.com/Kozea/top_model.git#egg=top_model
 	# Deps
-	$(PIP) install --trusted-host github.com --upgrade --no-cache pip setuptools -e .[test]
+	$(PIP) install --upgrade --no-cache pip setuptools -e .[test]
 
 install: install-python
 
