@@ -48,7 +48,7 @@ deploy_prod:
   script:
     - 'set -e'
     - 'output_file=/tmp/$CI_PROJECT_NAME-$branch_name.log'
-    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\", \"password\":\"$PASSWD\"}"'
+    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\"}"'
     - 'swget="wget --no-verbose --content-on-error -O-"'
     - '$swget --header="Content-Type:application/json" --post-data="""$parameters""" $JUNKRAT | tee $output_file && [[ $(tail -n1 $output_file) == "Success" ]]'
     - '$swget https://medbox.pharminfo.fr/api/webstore/resip_labo/0248'
