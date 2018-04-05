@@ -10,3 +10,4 @@ PIP = $(VENV)/bin/pip
 PYTHON = $(VENV)/bin/python
 FLASK = $(VENV)/bin/flask
 
+URL_PROD = https://medbox.pharminfo.fr/api/webstore/resip_labo/0248
