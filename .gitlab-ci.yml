@@ -17,7 +17,7 @@ image: paradoxxxzero/python-node-yarn-postgresql:latest
 install:
   stage: install
   script:
-    - sed -i '/git/d' Makefile
+    - sed -i '/git+/d' Makefile
     - make install
   <<: *artifacts
 
