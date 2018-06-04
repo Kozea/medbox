@@ -37,7 +37,7 @@ image_api = rest(ProductPhotoCIP, only=('cip', 'name', 'ext'))
 @image_api.declare('GET')
 def get_image(payload, cip, name, ext):
     result = image_api.get(payload, cip=cip)
-    for obj in result.data['objects']:
+    for obj in getattr(result, 'data', result)['objects']:
         obj['name'] = quote(obj['name'])
         obj['url'] = app.config['BASE_IMAGE_URL'].format(**obj)
     return result
