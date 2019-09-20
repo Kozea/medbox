@@ -12,7 +12,7 @@ stages:
     paths:
       - .env/
 
-image: paradoxxxzero/python-node-yarn-postgresql:latest
+image: kozea/python-node-yarn-postgresql:latest
 
 install:
   stage: install
@@ -22,7 +22,7 @@ install:
   <<: *artifacts
 
 .image: &image_deploy_jobs
-  image: grewn0uille/deploy-tools:latest
+  image: kozea/deploy-tools:latest
 
 deploy_test:
   <<: *image_deploy_jobs
